@@ -1,0 +1,769 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>elabuga</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="styles/vendor.css">
+
+    <link rel="stylesheet" href="styles/main.css">
+
+    <script src="scripts/vendor/modernizr.js"></script>
+  </head>
+  <body id="main-page">
+
+    <header class="header">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 col-md-2">
+            <a class="logo" href="./"></a>
+          </div>
+          <div class="col-sm-4 col-md-3 col-md-offset-1 col-lg-3 col-lg-offset-2 text-center">
+            <div class="user-panel">
+              <a class="user-panel__link user-panel__link--cabinet" href="#">Вход</a> /<a class="user-panel__link" href="#">Регистрация</a>
+            </div>
+          </div>
+          <div class="col-sm-4 col-md-3 text-left">
+            <div class="header-contacts">
+              <div>
+                <a class="header-contacts__tel" href="tel:8855573-10-35">8 (85557) <strong>3-99-44</strong></a>
+                <a class="header-contacts__dropdown-btn" v-on:click="openPhones = !openPhones" v-bind:class="{'opened': openPhones}"></a>
+              </div>
+              <div class="header-contacts__hidden" v-show="openPhones">
+                <ul>
+                  <li><a href="tel:8855573-10-35">8 (85557) <strong>3-99-44</strong></a></li>
+                  <li><a href="tel:8855573-10-35">8 (85557) <strong>3-99-44</strong></a></li>
+                  <li><a href="tel:8855573-10-35">8 (85557) <strong>3-99-44</strong></a></li>
+                </ul>
+              </div>
+            <!--   <span class="header-contacts__caption">
+                рекламная служба сайта
+              </span> -->
+            </div>
+          </div>
+          <div class="col-sm-offset-8 col-sm-4 col-md-offset-0 col-md-2">
+            <div class="header-add">
+              <a class="btn btn-default" href="#">
+                ПОДАТЬ ОБЪЯВЛЕНИЕ
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+    </header>
+
+    <section id="map" class="map">
+
+      <div class="container">
+
+        <nav class="popular-menu">
+
+          <!--<span class="popular-menu__title"><span class="hidden-sm">Популярное</span></span>-->
+
+          <ul>
+
+            <li>
+              <a href="#">Аптеки</a>
+            </li>
+            <li>
+              <a href="#">Банки</a>
+            </li>
+            <li>
+              <a href="#">Кафе</a>
+            </li>
+            <li>
+              <a href="#">Доставка воды и еды</a>
+            </li>
+            <li>
+              <a href="#">Окна и двери</a>
+            </li>
+            <li>
+              <a href="#">Грузоперевозки</a>
+            </li>
+            <li>
+              <a href="#">Такси</a>
+            </li>
+            <li>
+              <a href="#">Агенства недвижимости</a>
+            </li>
+          </ul>
+
+        </nav>
+
+        <section class="main-search-forms">
+          <div class="main-search-forms__tabs" v-on:click.prevent>
+
+            <a href="#" class="left" v-bind:class="{'active': active == 'org'}" v-on:click="makeActive('org')">
+              <div class="layer">
+                <span>Найти фирму или организацию</span>
+              </div>
+            </a>
+            <a href="#" class="right" v-bind:class="{'active': active == 'adv'}" v-on:click="makeActive('adv')">
+              <div class="layer">
+                <span>Поиск по объявлениям</span>
+              </div>
+            </a>
+            <div class="clearfix"></div>
+          </div>
+          <div class="main-search-forms__content">
+
+            <div v-show="active=='org'">
+
+              <form class="main-search" action="#">
+                    <input class="main-search__input form-control" type="text" placeholder="Поиск по организациям. Например: Автосервис">
+                    <button class="btn main-search__btn" type="submit">Начать поиск</button>
+                    <div class="clearfix"></div>
+              </form>
+
+              <a class="toggle-main-catalog toggle-main-catalog--closed" v-on:click="orgCatalog = !orgCatalog" v-if="!orgCatalog">
+                Показать весь каталог огранизаций
+              </a>
+
+              <a class="toggle-main-catalog toggle-main-catalog--opened" v-on:click="orgCatalog = !orgCatalog" v-if="orgCatalog">
+                Скрыть каталог организаций
+              </a>
+
+                <div v-show="orgCatalog" class="main-catalog">
+
+                  <div class="main-catalog__inner">
+                    <ul class="main-catalog__letters">
+                      <template v-for="letter in catalogLetters">
+                        <li v-bind:class="{'active': letter == activeOrgLetter}">
+                          <a v-on:click="makeOrgLetterActive(letter)">{{letter}}</a>
+                        </li>
+                      </template>
+                    </ul>
+                    <div class="main-catalog__carousel-wrapper">
+                      <div class="hidden-xs main-catalog__carousel-prev" v-on:click="prevSlide('orgCarousel')"></div>
+                      <div class="hidden-xs main-catalog__carousel-next" v-on:click="nextSlide('orgCarousel')"></div>
+                      <div class="org-carousel owl-carousel">
+                        <template v-for="chunk in orgItems">
+                          <ul>
+                            <template v-for="item in chunk">
+                              <li>
+                                <a href="{{item.link}}">{{item.name}}</a>
+                              </li>
+                            </template>
+                          </ul>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="main-catalog__footer">
+                    <ul>
+                      <li><a href="#">Телефоны первой необходимости</a></li>
+                      <li><a href="#">Местное самоуправление</a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+
+
+            </div>
+
+            <div v-show="active=='adv'">
+
+              <form class="main-search" action="#">
+                    <input class="main-search__input form-control" type="text" placeholder="Поиск по объявлениям. Например: Автосервис">
+                    <button class="main-search__btn" type="submit">Начать поиск</button>
+                    <div class="clearfix"></div>
+              </form>
+
+
+              <a class="toggle-main-catalog toggle-main-catalog--closed" v-on:click="advCatalog = !advCatalog" v-if="!advCatalog">
+                Показать весь каталог объявлений
+              </a>
+
+              <a class="toggle-main-catalog toggle-main-catalog--opened" v-on:click="advCatalog = !advCatalog" v-if="advCatalog">
+                Скрыть каталог объявлений
+              </a>
+
+              <div v-show="advCatalog" class="main-catalog">
+
+                <div class="main-catalog__inner">
+                  <ul class="main-catalog__letters">
+                    <template v-for="letter in catalogLetters">
+                      <li v-bind:class="{'active': letter == activeAdvLetter}">
+                        <a v-on:click="makeAdvLetterActive(letter)">{{letter}}</a>
+                      </li>
+                    </template>
+                  </ul>
+                  <div class="main-catalog__carousel-wrapper">
+                    <div class="hidden-xs main-catalog__carousel-prev" v-on:click="prevSlide('advCarousel')"></div>
+                    <div class="hidden-xs main-catalog__carousel-next" v-on:click="nextSlide('advCarousel')"></div>
+                    <div class="adv-carousel owl-carousel">
+                      <template v-for="chunk in advItems">
+                        <ul>
+                          <template v-for="item in chunk">
+                            <li>
+                              <a href="{{item.link}}">{{item.name}}</a>
+                            </li>
+                          </template>
+                        </ul>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <div class="main-catalog__footer">
+                  <ul>
+                    <li><a href="#">Телефоны первой необходимости</a></li>
+                    <li><a href="#">Местное самоуправление</a></li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+        
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <div class="advertising-place"></div>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            <div class="advertising-place"></div>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            <div class="advertising-place"></div>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            <div class="advertising-place"></div>
+          </div>
+        </div>
+        
+      </div>
+
+    </section>
+
+    <main class="main-content">
+
+      <div class="container">
+        <div class="row">
+
+          <div class="col-sm-push-3 col-sm-9 col-md-push-2 col-md-7">
+            <section class="main-news">
+              <div class="main-news-content">
+                <div class="main-news-item-first">
+                  <img class="main-news-item-first__img" src="images/main-news-item-first.jpg" alt="">
+                  <div class="main-news-item-first__content">
+                    <a class="main-news-item-first__title" href="#">
+                      Семейный отдых в Челнинском
+                      дельфинарии - эмоции сближают!
+                    </a>
+                    <div>
+                      <span class="main-news-item-first__date">05.06.2016  13:15</span>
+                      <a class="main-news-item-first__comments" href="#"> 1</a>
+                      <span class="main-news-item-first__views">203</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-1.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  18:02</span>
+                    <a class="main-news-item__title" href="#">В выходные Татарстану предстоит смена погодных
+                      условий</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">13</span>
+                      <a class="main-news-item__comments" href="#">0</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-2.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  17:45</span>
+                    <a class="main-news-item__title" href="#">Программа Сабантуя-2016 в набережных Челнах</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">145</span>
+                      <a class="main-news-item__comments" href="#">12</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-3.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  11:21</span>
+                    <a class="main-news-item__title" href="#">В Японии наказанный родителями 7-летний ребенок
+                      неделю жил в лесу</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">456</span>
+                      <a class="main-news-item__comments" href="#">2</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-4.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  10:04</span>
+                    <a class="main-news-item__title" href="#">Профилактика пожаров в населенных пунктах</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">13</span>
+                      <a class="main-news-item__comments" href="#">0</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-5.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  10:07</span>
+                    <a class="main-news-item__title" href="#">В Татарстане срок бесплатной приватизации жилья
+                      продлен до марта 2017 года</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">59</span>
+                      <a class="main-news-item__comments" href="#">3</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="main-news-item">
+                  <img class="main-news-item__img" src="images/main-news-item-6.jpg" alt="">
+                  <div class="main-news-item__content">
+                    <span class="main-news-item__date">04.06.2016  08:21</span>
+                    <a class="main-news-item__title" href="#">В Елабуге прошли Тукаевские чтения</a>
+                    <div class="main-news-item__footer">
+                      <span class="main-news-item__views">21</span>
+                      <a class="main-news-item__comments" href="#">0</a>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="paginate">
+                  <div class="row">
+                    <div class="col-xs-2 col-md-2 col-lg-3 text-right">
+                    <!--  <a class="paginate__prev" href="#"><span class="hidden-xs hidden-sm">назад</span></a>-->
+                    </div>
+                    <div class="col-xs-8 col-md-8 col-lg-6 text-center">
+                      <ul class="paginate__pages">
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                      </ul>
+                    </div>
+                    <div class="col-xs-2 col-md-2 col-lg-3 text-left">
+                      <a class="paginate__next" href="#"><span class="hidden-xs hidden-sm">дальше</span></a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
+
+          <div class="col-sm-pull-9 col-sm-3 col-md-pull-7 col-md-2">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12">
+                <aside class="aside-advert">
+                  <h3 class="aside-advert__title">Объявления</h3>
+                  <ul class="aside-advert__list">
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  18:02</span>
+                      <a href="#">Отдам в добрые руки котят. Порода-сибирские. Звоните по телефону</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  17:34</span>
+                      <img src="images/ceiling.png" alt="">
+                      <a href="#">Натяжные потолки в кротчайшие сроки по выгодной цене!</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  15:01</span>
+                      <img src="images/car.png" alt="">
+                      <a href="#">Автоперевозки грузов по России. От газели до фуры, низкие тарифы, скидки</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  13:45</span>
+                      <a href="#">В магазин мебели требуется продавец. Оплата ежемесячная, удобный график</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  12:11</span>
+                      <a href="#">Предлагаю услуги по ретушированию. Обработка старых фотографий, праздничные рамки, коллажирование</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  10:56</span>
+                      <img src="images/tooth.png" alt="">
+                      <a href="#">Терапевтическия стоматология. Лечение пульпита и периодонтита. Протезирование без обточки зубов. Ортодонтия. Хирургическая стоматология</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  12:11</span>
+                      <a href="#">В продуктовый магазин требуется продавец</a>
+                    </li>
+                    <li>
+                      <span class="main-news-item__date">25.06.2016  10:23</span>
+                      <a href="#">Отдам даром много вещей на мальчика 1-3 года. Все в хорошем состоянии</a>
+                    </li>
+                  </ul>
+                </aside>
+              </div>
+              <!--<div class="col-xs-6 col-sm-12">
+                <aside class="aside-links">
+                  <h3 class="aside-links__title">Мини-сайты</h3>
+                  <ul class="aside-links__list">
+                    <li>
+                      <a href="#">
+                        Психологический центр
+                        «ЛОТОС»
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Ателье «KUPIDON»
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Свадебный салон
+                        IZABELLA
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Свадебный салон Наталья
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Салон "Азалия"
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        ПАРАПЛАНЕРНАЯ ШКОЛА
+                        "Free Spirit"
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        АВТОГАЗ
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Автосервис на ул.
+                        Строителей, 27
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Такси иномарки - КРУИЗ
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Свадебный салон
+                        "Любимая"
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        Vinilla Sky Натяжные
+                        потолки
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#">
+                        ООО «Мегатэк» -
+                        Грузоперевозки
+                      </a>
+                    </li>
+                  </ul>
+                </aside>
+              </div>-->
+            </div>
+
+
+            <!--<a class="btn btn-order" href="#">Заказать мини-сайт</a>-->
+          </div>
+
+          <div class="col-sm-12 col-md-3">
+            <aside class="aside-banners">
+              <a href="#">
+                <img class="img-responsive" src="images/banner-1.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-2.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-3.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-4.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-5.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-6.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-7.jpg">
+              </a>
+              <a href="#">
+                <img class="img-responsive" src="images/banner-8.jpg">
+              </a>
+            </aside>
+          </div>
+        </div>
+
+      </div>
+
+      <section class="main-info">
+
+        <div class="container">
+
+          <div class="row">
+            <div class="col-xs-12 col-md-3">
+              <div class="advertising-place"></div>
+            </div>
+            <div class="col-xs-12 col-md-3">
+              <div class="advertising-place"></div>
+            </div>
+            <div class="col-xs-12 col-md-3">
+              <div class="advertising-place"></div>
+            </div>
+            <div class="col-xs-12 col-md-3">
+              <div class="advertising-place"></div>
+            </div>
+          </div>
+
+          <div class="widgets">
+
+            <div class="row">
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget" href="#">
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+                    <h4 class="widget__title">Курсы валют</h4>
+
+                    <div class="widget-quotes-content">
+                      <div class="widget-quotes-content__date">
+                        <span class="pull-left">5 июня </span>
+                        <span class="pull-right">20:57 МСК</span>
+                        <div class="clearfix"></div>
+                      </div>
+                      <table class="table widget-quotes-content__table">
+                        <tbody>
+                        <tr>
+                          <td class="currency">USD</td>
+                          <td class="value">66.85</td>
+                          <td class="value-inc">+0.10</td>
+                        </tr>
+                        <tr>
+                          <td class="currency">EUR</td>
+                          <td class="value">74.56</td>
+                          <td class="value-dec">-0.26</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                </a>
+
+              </div>
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget widget--fine" href="#">
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+                    <h4 class="widget__title">ШТРАФЫ ГИБДД</h4>
+                  </div>
+
+
+                </a>
+
+              </div>
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget widget--map" href="#">
+
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+                    <h4 class="widget__title">Карта Елабуги</h4>
+                  </div>
+
+
+
+                </a>
+
+              </div>
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget" href="#">
+
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+
+                    <h4 class="widget__title">Погода</h4>
+
+                    <div class="widget-weather-content">
+                      <span class="widget-weather-content__place">Сегодня в Елабуге</span>
+                      <div>
+                        <div class="widget-weather-content__left">
+                          <span class="widget-weather-content__value">+17</span>
+                          <span class="widget-weather-content__caption">Пасмурно, дождь</span>
+                        </div>
+                        <div class="widget-weather-content__right">
+                          <img class="widget-weather-content__icon" src="images/weather-icon.png">
+                        </div>
+                        <div class="clearfix"></div>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </a>
+
+              </div>
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget widget--schedule" href="#">
+
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+                    <h4 class="widget__title">Расписание
+                      автобусов</h4>
+                  </div>
+
+                </a>
+
+              </div>
+
+              <div class="col-xxs-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+                <a class="widget widget--services" href="#">
+
+                  <div class="widget__hover-bg"></div>
+                  <div class="widget__content">
+                    <h4 class="widget__title">ГОс услуги</h4>
+                  </div>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+
+            <p class="copyright">
+              © <strong>YELABUGA.RU</strong> 2016, Все права защищены
+            </p>
+
+            <p class="address">
+              Адрес редакции: 423603, РФ, Республика Татарстан,
+              г. Елабуга, пр. Мира, 14 а, ООО «Хорошая редакция».
+            </p>
+
+          </div>
+
+          <div class="col-sm-6 col-md-5">
+
+            <div class="social">
+              <span class="social__caption">Мы в соц. сетях:</span>
+              <nav class="social__links">
+                <ul>
+                  <li><a class="social-vk" href="#"></a></li>
+                  <li><a class="social-fb" href="#"></a></li>
+                  <li><a class="social-ok" href="#"></a></li>
+                  <li><a class="social-mailru" href="#"></a></li>
+                  <li><a class="social-twi" href="#"></a></li>
+                </ul>
+              </nav>
+            </div>
+
+            <p class="footer-contacts">
+              Тел.: 8 (85557) <strong>3-99-44</strong>, <strong>3-10-35</strong>.<br>
+              E-mail: <a href="mailto:smi-hg@yandex.ru">smi-hg@yandex.ru</a>
+            </p>
+
+          </div>
+
+          <div class="col-md-3">
+
+            <a class="developer" href="#">
+              <span class="developer__caption">Создание сайта</span>
+              <span class="developer__icon"></span>
+            </a>
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </footer>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='https://www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <script src="scripts/vendor.js"></script>
+
+    <script src="scripts/plugins.js"></script>
+
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
